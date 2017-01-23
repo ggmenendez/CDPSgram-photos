@@ -5,8 +5,7 @@ var multer = require('multer');
 
 var app = express();
 
-//var media_path = __dirname + '/media/';
-var media_path = '/nas/';
+var media_path ='/mnt/nas/';
 
 var port = parseInt(process.env.PORT || '8000', 10);
 app.listen(port);
@@ -39,9 +38,18 @@ app.get('/photos/:photoId', function(req,res){
 });
 
 
+app.put('/photos/:photoId', function(req,res){
+    var name = req.params.photoId;
+	//var likes +=1;
+    var url = '/photos/' + name;
+	res.status(200).send(url);
+});
+
+
 //Guarda la imagen subida
 app.post('/photos', multer({ dest: media_path }), function(req, res) {
 	var name = req.files.photo.name;
+    var likes = req.body.likes;
 	console.log('Creating foto', name);
 	var url = '/photos/' + name;
     res.status(200).send(url);
@@ -51,7 +59,7 @@ app.post('/photos', multer({ dest: media_path }), function(req, res) {
 app.delete('/photos/:photoId', function(req,res){
 	var id = req.params.photoId;
 	console.log("Delete photo", id);
-	p = media_path + id; 
+	p = media_path + id;
 	fs.unlinkSync(p);
 	res.status(200).send('Deleted');
 });
